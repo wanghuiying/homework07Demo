@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title>homework07</title>
+	<link rel="stylesheet" type="text/css" href="homework07.css">
+	<script type="text/javascript" src="animate.js"></script>
+</head>
+<body>	
+	<div class="broadcast" style="background-color:#ccc; height: 20.8px;">
+		<div class="picture" style="position: fixed; left: 450px; height: 20.8px">
+			<img src="images/a15.png">
+		</div>
+		<div class="rightbox" style="position: fixed; width: 950px; left: 480px; height: 20.8px; overflow: hidden;" >
+			<div id="slidewords" style="color: red; position: absolute; width: 450px; right: -420px;">
+				【温馨提示】：最近有不少不法分子在网上骗人，大家注意!!!
+			</div>
+		</div>
+	</div>
+	<div class="box" id="box">
+		<div class="slider" id="slider">
+			<div class="slide"><img src="images/b5.png" alt=""></div>
+			<div class="slide"><img src="images/b1.png" alt=""></div>
+			<div class="slide"><img src="images/b2.png" alt=""></div>
+			<div class="slide"><img src="images/b3.png" alt=""></div>
+			<div class="slide"><img src="images/b4.png" alt=""></div>
+			<div class="slide"><img src="images/b5.png" alt=""></div>
+			<div class="slide"><img src="images/b1.png" alt=""></div>
+		</div>
+		<span id="left"> < </span>
+		<span id="right"> > </span>
+		<ul class="nav" id="nav">
+			<li class="active">1</li>
+			<li> 2 </li>
+			<li> 3 </li>
+			<li> 4 </li>
+			<li> 5 </li>
+		</ul>
+	</div>
+	<script type="text/javascript">
+		var broadcast=document.getElementById('broadcast');
+		var picture=document.getElementById('picture');
+		var rightbox=document.getElementById('rightbox');
+		var slidewords=document.getElementById('slidewords');
+		var box=document.getElementById('box');
+		var navList=document.getElementById('nav').children;
+		var slider=document.getElementById('slider');
+		var left=document.getElementById('left');
+		var right=document.getElementById('right');
+		var slidewords =document.getElementById('slidewords');
+		var index=1;
+		var timer;
+		var moving=false;
+		function getStyle(obj,style){
+	    	if(obj.currentStyle){//IE浏览器
+	    		return obj.currentStyle;
+	    	}
+	    	else{//火狐浏览器和谷歌浏览器
+	    		return getComputedStyle(obj)[style];
+	    	}
+	    }
+		setInterval("broad()",100);
+		function broad(){
+			var now =parseInt(getStyle(slidewords,'right'));
+			slidewords.style.right = now + 10 +'px';
+
+			if (now == 940) {
+    			slidewords.style.right = "-500px";
+    		}
+		}
+		//鼠标不在图片上时
+		box.onmouseout=function(){
+			animate(left,{opacity:0});
+			animate(right,{opacity:0});
+			timer=setInterval(next,3000);
+		}
+		//鼠标在图片上时
+		box.onmouseover=function(){
+			animate(left,{opacity:50});
+			animate(right,{opacity:50});
+			clearInterval(timer);
+		}
+		right.onclick=next;
+		left.onclick=pre;
+		for(var i=0;i<navList.length;i++){
+			navList[i].index=i;
+			navList[i].onclick=function(){
+				index=this.index+1;
+				navMove();
+				animate(slider,{left:-1200*index});
+			}
+		}
+		//下一个图片
+		function next(){
+			if(moving){
+				return ;
+			}
+			moving=true;
+			index++;  
+			navMove();
+			animate(slider,{left:-1200*index},function(){
+				if(index==6){
+					slider.style.left='1200px';
+					index=1;
+				}
+				moving=false;
+			})
+		}
+		//前一个图片
+		function pre(){
+			if(moving){
+				return ;
+			}
+			moving=true;
+			index--;
+			navMove();
+			animate(slider,{left:-1200*index},function(){
+				if(index==0){
+					slider.style.left='-6000px';
+					index=5;
+				}
+				moving=false;
+			});
+		}
+
+		function navMove(){
+			for(var i=0;i<navList.length;i++){
+				navList[i].className="";
+			}
+			if (index>5) {
+				navList[0].className="active";
+			}else if(index<=0){
+				navList[4].className="active";
+			}else{
+				navList[index-1].className="active";
+			}
+		}
+		timer=setInterval(next,3000);
+	</script>
+</body>
+</html>
